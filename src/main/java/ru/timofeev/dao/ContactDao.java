@@ -5,13 +5,15 @@ import ru.timofeev.model.Contact;
 import java.util.List;
 
 public interface ContactDao {
-    List<Contact> findAll();
-
-    List<Contact> findByFirstName(String firstName);
+    String findFirstNameById(Long id);
 
     String findLastNameById(Long id);
 
-    String findFirstNameById(Long id);
+    List<Contact> findAll();
+
+    List<Contact> findAllWithDetail();
+
+    List<Contact> findByFirstName(String firstName);
 
     void insert(Contact contact);
 
