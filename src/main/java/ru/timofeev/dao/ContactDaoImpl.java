@@ -3,6 +3,7 @@ package ru.timofeev.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.timofeev.model.Contact;
+import ru.timofeev.model.ContactTelDetail;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -52,6 +53,28 @@ public class ContactDaoImpl implements ContactDao {
             Map<Long, Contact> map = new HashMap<>();
             Contact contact;
 
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                contact = map.get(id);
+                if (contact == null) {
+                    contact = new Contact();
+                    contact.setId(id);
+                    contact.setFirstName(rs.getString("first_name"));
+                    contact.setLastName(rs.getString("last_name"));
+                    contact.setBirthDate(rs.getDate("birth_date"));
+                    contact.setContactTelDetails(new ArrayList<>());
+                    map.put(id, contact);
+                }
+                Long contactTelDetailId = rs.getLong("contact_tel_id");
+                if (contactTelDetailId > 0) {
+                    ContactTelDetail contactTelDetail = new ContactTelDetail();
+                    contactTelDetail.setId(contactTelDetailId);
+                    contactTelDetail.setContactId(id);
+                    contactTelDetail.setTelType(rs.getString("tel_type"));
+                    contactTelDetail.setTelNumber(rs.getString("tel_number"));
+                    contact.getContactTelDetails().add(contactTelDetail);
+                }
+            }
             return new ArrayList<>(map.values());
         });
     }
