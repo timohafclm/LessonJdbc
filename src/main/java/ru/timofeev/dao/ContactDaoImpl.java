@@ -2,6 +2,7 @@ package ru.timofeev.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 import ru.timofeev.model.Contact;
 import ru.timofeev.model.ContactTelDetail;
 
@@ -12,13 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository("contactDao")
 public class ContactDaoImpl implements ContactDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private SelectContactByFirstName selectContactByFirstName;
+    private UpdateContact updateContact;
 
     public ContactDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        selectContactByFirstName = new SelectContactByFirstName(dataSource);
+        updateContact = new UpdateContact(dataSource);
     }
 
     public String findFirstNameById(Long id) {
@@ -79,17 +85,24 @@ public class ContactDaoImpl implements ContactDao {
         });
     }
 
+    @Override
     public List<Contact> findByFirstName(String firstName) {
-        return null;
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("first_name", firstName);
+        return selectContactByFirstName.executeByNamedParam(paramMap);
     }
-
 
     public void insert(Contact contact) {
 
     }
 
     public void update(Contact contact) {
-
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("first_name", contact.getFirstName());
+        paramMap.put("last_name", contact.getLastName());
+        paramMap.put("birth_date", contact.getBirthDate());
+        paramMap.put("id", contact.getId());
+        updateContact.updateByNamedParam(paramMap);
     }
 
     public void delete(Long contactId) {

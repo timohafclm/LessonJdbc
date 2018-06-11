@@ -5,6 +5,7 @@ import ru.timofeev.model.Contact;
 import java.util.List;
 
 public interface ContactDao {
+
     String findFirstNameById(Long id);
 
     String findLastNameById(Long id);
