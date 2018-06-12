@@ -16,7 +16,9 @@ public interface ContactDao {
 
     List<Contact> findByFirstName(String firstName);
 
-    void insert(Contact contact);
+    long insert(Contact contact);
+
+    void insertWithDetail(Contact contact);
 
     void update(Contact contact);
 

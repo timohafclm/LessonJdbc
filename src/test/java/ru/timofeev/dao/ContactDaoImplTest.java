@@ -59,7 +59,7 @@ public class ContactDaoImplTest {
         newContact.setFirstName("Tailer");
         newContact.setLastName("Derden");
         newContact.setBirthDate(new Date(
-                (new GregorianCalendar(1990, 11, 27)).getTime().getTime()));
+                (new GregorianCalendar(1990, 10, 27)).getTime().getTime()));
         String oldContact = contactDao.findFirstNameById(1L);
         assertTrue(oldContact.equals("Chris"));
         // when
@@ -67,5 +67,19 @@ public class ContactDaoImplTest {
         // then
         String newContactName = contactDao.findFirstNameById(1L);
         assertTrue(newContactName.equals("Tailer"));
+    }
+
+    @Test
+    public void insert() {
+        // given
+        Contact newContact = new Contact();
+        newContact.setId(1L);
+        newContact.setFirstName("Mitch");
+        newContact.setLastName("James");
+        newContact.setBirthDate(new Date(
+                (new GregorianCalendar(1990, 10, 27)).getTime().getTime()));
+        // when
+        long id = contactDao.insert(newContact);
+        assertTrue(id == 4);
     }
 }
